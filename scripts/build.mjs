@@ -271,7 +271,7 @@ const pageMeta = {
 function buildPage({ pathname, title, content, description }) {
   const rootPath = rootFor(pathname);
   const home = rootPath || './';
-  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname, description)).replace('{{CANONICAL}}', canonical(pathname)).replace('{{OG_URL}}', esc(`${SITE_URL}${pathname}`)).replace('{{DESCRIPTION}}', esc(description)).replaceAll('{{VERSION}}', esc(site.version));
+  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname, description)).replace('{{CANONICAL}}', canonical(pathname)).replace('{{OG_URL}}', esc(`${SITE_URL}${pathname}`)).replace('{{DESCRIPTION}}', esc(description)).replace('{{ROBOTS}}', pathname === '/' || pathname === '/about/' || pathname.startsWith('/work/') ? 'index,follow' : 'noindex,follow').replaceAll('{{VERSION}}', esc(site.version));
   return html;
 }
 
@@ -302,7 +302,7 @@ for (const [index, project] of site.projects.entries()) {
 
 await fs.writeFile(path.join(dist, '404.html'), notFound);
 
-const sitemapPaths = [...Object.values(pages), ...site.projects.map(project => `/work/${project.slug}/`)];
+const sitemapPaths = ['/', '/about/', ...site.projects.map(project => `/work/${project.slug}/`)];
 const sitemapUrls = sitemapPaths.map(p => `  <url><loc>${SITE_URL}${p}</loc></url>`).join('\n');
 await fs.writeFile(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 await fs.writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls}\n</urlset>\n`);
