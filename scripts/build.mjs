@@ -36,15 +36,28 @@ const arrow = (direction='up-right') => {
 };
 const rootFor = (pathname) => (pathname === '/' || pathname === '/404.html') ? '' : '../';
 const canonical = (pathname) => SITE_URL ? `<link rel="canonical" href="${SITE_URL}${pathname}">` : `<link rel="canonical" href="${pathname}">`;
-const jsonld = (pageUrl) => JSON.stringify({
-  '@context':'https://schema.org',
-  '@type':'Person',
-  '@id': SITE_URL ? `${SITE_URL}/#person` : '/#person',
-  name:'Abdullah Affun',
-  url:SITE_URL ? `${SITE_URL}${pageUrl}` : pageUrl,
-  sameAs:['https://github.com/abdullahaffun-dev','https://www.linkedin.com/in/abdullah-affun/'],
-  mainEntityOfPage:{'@type':'ProfilePage', '@id': SITE_URL ? `${SITE_URL}${pageUrl}` : pageUrl}
-}).replaceAll('<','\\u003c');
+const jsonld = (pageUrl, description) => {
+  const pageId = SITE_URL ? `${SITE_URL}${pageUrl}` : pageUrl;
+  const person = {
+    '@type':'Person',
+    '@id': SITE_URL ? `${SITE_URL}/#person` : '/#person',
+    name:'Abdullah Affun',
+    description:'A technically curious student and independent learner exploring cybersecurity, Python, AI, systems, networking, Linux, and mathematics.',
+    image: SITE_URL ? `${SITE_URL}/assets/og.jpg` : '/assets/og.jpg',
+    url:SITE_URL ? `${SITE_URL}/` : '/',
+    sameAs:['https://github.com/abdullahaffun-dev','https://www.linkedin.com/in/abdullah-affun/']
+  };
+  const page = {
+    '@context':'https://schema.org',
+    '@type': pageUrl === '/about/' ? 'ProfilePage' : 'WebPage',
+    '@id': pageId,
+    url: pageId,
+    description,
+    mainEntity: person
+  };
+  if (pageUrl === '/about/') page.name = 'About — Abdullah Affun';
+  return JSON.stringify(page).replaceAll('<','\\u003c');
+};
 
 function hero() {
   return `<section id="top" class="hero" aria-labelledby="hero-title">
@@ -258,7 +271,7 @@ const pageMeta = {
 function buildPage({ pathname, title, content, description }) {
   const rootPath = rootFor(pathname);
   const home = rootPath || './';
-  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname)).replace('{{CANONICAL}}', canonical(pathname)).replace('{{OG_URL}}', esc(`${SITE_URL}${pathname}`)).replace('{{DESCRIPTION}}', esc(description)).replaceAll('{{VERSION}}', esc(site.version));
+  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname, description)).replace('{{CANONICAL}}', canonical(pathname)).replace('{{OG_URL}}', esc(`${SITE_URL}${pathname}`)).replace('{{DESCRIPTION}}', esc(description)).replaceAll('{{VERSION}}', esc(site.version));
   return html;
 }
 
