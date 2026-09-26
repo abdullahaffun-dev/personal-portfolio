@@ -43,7 +43,6 @@ const jsonld = (pageUrl, description) => {
     '@id': SITE_URL ? `${SITE_URL}/#person` : '/#person',
     name:'Abdullah Affun',
     description:'A technically curious student and independent learner exploring cybersecurity, Python, AI, systems, networking, Linux, and mathematics.',
-    image: SITE_URL ? `${SITE_URL}/assets/og.jpg` : '/assets/og.jpg',
     url:SITE_URL ? `${SITE_URL}/` : '/',
     sameAs:['https://github.com/abdullahaffun-dev','https://www.linkedin.com/in/abdullah-affun/']
   };
@@ -281,10 +280,6 @@ await fs.writeFile(path.join(dist, 'styles.css'), css);
 await fs.writeFile(path.join(dist, 'site.js'), js);
 await fs.writeFile(path.join(dist, 'theme-preload.js'), themeJs);
 await fs.writeFile(path.join(dist, 'favicon.svg'), await fs.readFile(path.join(src, 'favicon.svg')));
-
-await fs.mkdir(path.join(dist, 'assets'), { recursive: true });
-await fs.copyFile(path.join(src, 'assets', 'og.jpg'), path.join(dist, 'assets', 'og.jpg'));
-
 await fs.writeFile(path.join(dist, 'index.html'), buildPage({ pathname:'/', title:pageMeta.home.title, description:pageMeta.home.description, content:homeContent }));
 for (const [key, pathname] of Object.entries(pages)) {
   if (key === 'home') continue;
