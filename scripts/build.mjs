@@ -282,6 +282,9 @@ await fs.writeFile(path.join(dist, 'site.js'), js);
 await fs.writeFile(path.join(dist, 'theme-preload.js'), themeJs);
 await fs.writeFile(path.join(dist, 'favicon.svg'), await fs.readFile(path.join(src, 'favicon.svg')));
 
+await fs.mkdir(path.join(dist, 'assets'), { recursive: true });
+await fs.copyFile(path.join(src, 'assets', 'og.jpg'), path.join(dist, 'assets', 'og.jpg'));
+
 await fs.writeFile(path.join(dist, 'index.html'), buildPage({ pathname:'/', title:pageMeta.home.title, description:pageMeta.home.description, content:homeContent }));
 for (const [key, pathname] of Object.entries(pages)) {
   if (key === 'home') continue;
