@@ -240,7 +240,7 @@ const pageMeta = {
 function buildPage({ pathname, title, content }) {
   const rootPath = rootFor(pathname);
   const home = rootPath || './';
-  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname)).replace('{{CANONICAL}}', canonical(pathname)).replaceAll('{{VERSION}}', esc(site.version));
+  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname)).replace('{{CANONICAL}}', canonical(pathname)).replace('{{OG_URL}}', esc(`${SITE_URL}${pathname}`)).replaceAll('{{VERSION}}', esc(site.version));
   return html;
 }
 
@@ -250,6 +250,8 @@ await fs.writeFile(path.join(dist, 'styles.css'), css);
 await fs.writeFile(path.join(dist, 'site.js'), js);
 await fs.writeFile(path.join(dist, 'theme-preload.js'), themeJs);
 await fs.writeFile(path.join(dist, 'favicon.svg'), await fs.readFile(path.join(src, 'favicon.svg')));
+await fs.mkdir(path.join(dist, 'assets'), { recursive: true });
+await fs.copyFile(path.join(src, 'assets', 'og.jpg'), path.join(dist, 'assets', 'og.jpg'));
 
 await fs.writeFile(path.join(dist, 'index.html'), buildPage({ pathname:'/', title:pageMeta.home, content:homeContent }));
 for (const [key, pathname] of Object.entries(pages)) {
