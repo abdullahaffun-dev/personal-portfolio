@@ -39,6 +39,7 @@ const canonical = (pathname) => SITE_URL ? `<link rel="canonical" href="${SITE_U
 const jsonld = (pageUrl) => JSON.stringify({
   '@context':'https://schema.org',
   '@type':'Person',
+  '@id': SITE_URL ? `${SITE_URL}/#person` : '/#person',
   name:'Abdullah Affun',
   url:SITE_URL ? `${SITE_URL}${pageUrl}` : pageUrl,
   sameAs:['https://github.com/abdullahaffun-dev','https://www.linkedin.com/in/abdullah-affun/'],
