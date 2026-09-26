@@ -271,7 +271,7 @@ const pageMeta = {
 function buildPage({ pathname, title, content, description }) {
   const rootPath = rootFor(pathname);
   const home = rootPath || './';
-  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname, description)).replace('{{CANONICAL}}', canonical(pathname)).replace('{{OG_URL}}', esc(`${SITE_URL}${pathname}`)).replace('{{DESCRIPTION}}', esc(description)).replace('{{ROBOTS}}', pathname === '/' || pathname === '/about/' || pathname.startsWith('/work/') ? 'index,follow' : 'noindex,follow').replaceAll('{{VERSION}}', esc(site.version));
+  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname, description)).replace('{{CANONICAL}}', canonical(pathname)).replace('{{OG_URL}}', esc(`${SITE_URL}${pathname}`)).replace('{{DESCRIPTION}}', esc(description)).replace('{{ROBOTS}}', pathname === '/' || pathname === '/about/' || (pathname.startsWith('/work/') && pathname !== '/work/') ? 'index,follow' : 'noindex,follow').replaceAll('{{VERSION}}', esc(site.version));
   return html;
 }
 
