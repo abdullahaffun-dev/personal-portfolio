@@ -269,13 +269,10 @@ for (const [index, project] of site.projects.entries()) {
 
 await fs.writeFile(path.join(dist, '404.html'), notFound);
 
-await fs.writeFile(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n${SITE_URL ? `Sitemap: ${SITE_URL}/sitemap.xml\n` : '# Sitemap URL is emitted when SITE_URL is supplied at build time.\n'}`);
-if (SITE_URL) {
-  const urls = Object.values(pages).map(p => `  <url><loc>${SITE_URL}${p}</loc></url>`).join('\n');
-  await fs.writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
-} else {
-  await fs.writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<!-- Supply SITE_URL during the production build to emit absolute sitemap URLs. -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>\n`);
-}
+const sitemapPaths = [...Object.values(pages), ...site.projects.map(project => `/work/${project.slug}/`)];
+const sitemapUrls = sitemapPaths.map(p => `  <url><loc>${SITE_URL}${p}</loc></url>`).join('\n');
+await fs.writeFile(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+await fs.writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls}\n</urlset>\n`);
 
 await fs.writeFile(path.join(dist, '_headers'), `/*
   Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; upgrade-insecure-requests
