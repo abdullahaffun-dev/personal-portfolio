@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+# Sitemap URL is emitted when SITE_URL is supplied at build time.

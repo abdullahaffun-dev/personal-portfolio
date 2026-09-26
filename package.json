@@ -1,0 +1,9 @@
+{
+  "name": "affun-curiosity-out-of-bounds",
+  "version": "1.543.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  }
+}
