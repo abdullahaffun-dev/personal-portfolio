@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const src = path.join(root, 'src');
 const dist = path.join(root, 'dist');
-const SITE_URL = (process.env.SITE_URL || '').replace(/\/$/, '');
+const SITE_URL = (process.env.SITE_URL || 'https://abdullahaffun.afnworks.workers.dev').replace(/\/$/, '');
 
 const css = await fs.readFile(path.join(src, 'styles.css'), 'utf8');
 const js = await fs.readFile(path.join(src, 'site.js'), 'utf8');
