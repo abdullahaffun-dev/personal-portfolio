@@ -229,18 +229,36 @@ const focused = {
 };
 
 const pageMeta = {
-  home: 'Abdullah Affun',
-  work: 'Projects — Abdullah Affun',
-  explore: 'Exploration — Abdullah Affun',
-  origin: 'Origin — Abdullah Affun',
-  about: 'About — Abdullah Affun',
-  contact: 'Contact — Abdullah Affun'
+  home: {
+    title: 'Abdullah Affun',
+    description: 'Abdullah Affun’s portfolio exploring cybersecurity, Python, AI, systems, networking, Linux, and mathematics.'
+  },
+  work: {
+    title: 'Projects — Abdullah Affun',
+    description: 'Projects, experiments, labs, and technical work by Abdullah Affun.'
+  },
+  explore: {
+    title: 'Exploration — Abdullah Affun',
+    description: 'Abdullah Affun’s current exploration across cybersecurity, Python, AI, systems, networking, Linux, and mathematics.'
+  },
+  origin: {
+    title: 'Origin — Abdullah Affun',
+    description: 'A factual outline of Abdullah Affun’s evolving path into programming, Linux, networking, security, and systems.'
+  },
+  about: {
+    title: 'About — Abdullah Affun',
+    description: 'About Abdullah Affun, a student and independent learner exploring technical disciplines and their connections.'
+  },
+  contact: {
+    title: 'Contact — Abdullah Affun',
+    description: 'Contact Abdullah Affun about technical work, collaboration, projects, and authorized security work.'
+  }
 };
 
-function buildPage({ pathname, title, content }) {
+function buildPage({ pathname, title, content, description }) {
   const rootPath = rootFor(pathname);
   const home = rootPath || './';
-  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname)).replace('{{CANONICAL}}', canonical(pathname)).replace('{{OG_URL}}', esc(`${SITE_URL}${pathname}`)).replaceAll('{{VERSION}}', esc(site.version));
+  let html = base.replaceAll('{{TITLE}}', esc(title)).replaceAll('{{ROOT}}', rootPath).replaceAll('{{HOME}}', home).replace('{{CONTENT}}', content).replace('{{JSONLD}}', jsonld(pathname)).replace('{{CANONICAL}}', canonical(pathname)).replace('{{OG_URL}}', esc(`${SITE_URL}${pathname}`)).replace('{{DESCRIPTION}}', esc(description)).replaceAll('{{VERSION}}', esc(site.version));
   return html;
 }
 
@@ -253,20 +271,20 @@ await fs.writeFile(path.join(dist, 'favicon.svg'), await fs.readFile(path.join(s
 await fs.mkdir(path.join(dist, 'assets'), { recursive: true });
 await fs.copyFile(path.join(src, 'assets', 'og.jpg'), path.join(dist, 'assets', 'og.jpg'));
 
-await fs.writeFile(path.join(dist, 'index.html'), buildPage({ pathname:'/', title:pageMeta.home, content:homeContent }));
+await fs.writeFile(path.join(dist, 'index.html'), buildPage({ pathname:'/', title:pageMeta.home.title, description:pageMeta.home.description, content:homeContent }));
 for (const [key, pathname] of Object.entries(pages)) {
   if (key === 'home') continue;
   const dir = path.join(dist, pathname);
   await fs.mkdir(dir, { recursive: true });
   const pageContent = `<div class="page-frame"><div class="section-shell"><a class="page-back" href="../">${arrow('left')} Back to exploring</a></div>${focused[key]}</div>`;
-  await fs.writeFile(path.join(dir, 'index.html'), buildPage({ pathname, title:pageMeta[key], content:pageContent }));
+  await fs.writeFile(path.join(dir, 'index.html'), buildPage({ pathname, title:pageMeta[key].title, description:pageMeta[key].description, content:pageContent }));
 }
 
-const notFound = buildPage({ pathname:'/404.html', title:'404 — Abdullah Affun', content:`<div class="page-frame"><div class="section-shell"><section class="not-found" aria-labelledby="nf-title"><div><div class="nf-kicker">404</div><h1 id="nf-title" class="nf-title">SOMETHING<br>WENT OUT<br>OF BOUNDS.</h1><p class="nf-text">This path doesn't exist.</p><a class="nf-link" href="../">← Back to exploring</a><div class="nf-graphic" aria-hidden="true"></div></div></section></div></div>` });
+const notFound = buildPage({ pathname:'/404.html', title:'404 — Abdullah Affun', description:'The requested page could not be found on Abdullah Affun’s portfolio.', content:`<div class="page-frame"><div class="section-shell"><section class="not-found" aria-labelledby="nf-title"><div><div class="nf-kicker">404</div><h1 id="nf-title" class="nf-title">SOMETHING<br>WENT OUT<br>OF BOUNDS.</h1><p class="nf-text">This path doesn't exist.</p><a class="nf-link" href="../">← Back to exploring</a><div class="nf-graphic" aria-hidden="true"></div></div></section></div></div>` });
 for (const [index, project] of site.projects.entries()) {
   const dir = path.join(dist, 'work', project.slug);
   await fs.mkdir(dir, { recursive: true });
-  await fs.writeFile(path.join(dir, 'index.html'), buildPage({ pathname:`/work/${project.slug}/`, title:`${project.title} — Abdullah Affun`, content:projectDetail(project, index, site.projects) }));
+  await fs.writeFile(path.join(dir, 'index.html'), buildPage({ pathname:`/work/${project.slug}/`, title:`${project.title} — Abdullah Affun`, description: project.summary ? `${project.summary} — Abdullah Affun` : `Project details and technical work by Abdullah Affun.`, content:projectDetail(project, index, site.projects) }));
 }
 
 await fs.writeFile(path.join(dist, '404.html'), notFound);
