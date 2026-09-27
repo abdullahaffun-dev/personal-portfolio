@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://abdullahaffun.afnworks.workers.dev/sitemap.xml
+Sitemap: https://abdullahaffun.pages.dev/sitemap.xml

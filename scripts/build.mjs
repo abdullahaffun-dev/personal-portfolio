@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const src = path.join(root, 'src');
 const dist = path.join(root, 'dist');
-const SITE_URL = (process.env.SITE_URL || (process.env.CF_PAGES === '1' ? 'https://abdullahaffun.pages.dev' : 'https://abdullahaffun.afnworks.workers.dev')).replace(/\/$/, '');
+const SITE_URL = (process.env.SITE_URL || 'https://abdullahaffun.pages.dev').replace(/\/$/, '');
 
 const css = await fs.readFile(path.join(src, 'styles.css'), 'utf8');
 const js = await fs.readFile(path.join(src, 'site.js'), 'utf8');
@@ -37,17 +37,17 @@ const arrow = (direction='up-right') => {
 const rootFor = (pathname) => (pathname === '/' || pathname === '/404.html') ? '' : '../';
 const canonical = (pathname) => SITE_URL ? `<link rel="canonical" href="${SITE_URL}${pathname}">` : `<link rel="canonical" href="${pathname}">`;
 const jsonld = (pageUrl, description) => {
-  const pageId = SITE_URL ? `${SITE_URL}${pageUrl}` : pageUrl;
+  const pageId = `${SITE_URL}${pageUrl}`;
+  const personId = `${SITE_URL}/#person`;
   const person = {
     '@type':'Person',
-    '@id': SITE_URL ? `${SITE_URL}/#person` : '/#person',
+    '@id':personId,
     name:'Abdullah Affun',
     description:'A technically curious student and independent learner exploring cybersecurity, Python, AI, systems, networking, Linux, and mathematics.',
-    url:SITE_URL ? `${SITE_URL}/` : '/',
+    url:`${SITE_URL}/`,
     sameAs:['https://github.com/abdullahaffun-dev','https://www.linkedin.com/in/abdullah-affun/']
   };
   const page = {
-    '@context':'https://schema.org',
     '@type': pageUrl === '/about/' ? 'ProfilePage' : 'WebPage',
     '@id': pageId,
     url: pageId,
@@ -55,7 +55,18 @@ const jsonld = (pageUrl, description) => {
     mainEntity: person
   };
   if (pageUrl === '/about/') page.name = 'About — Abdullah Affun';
-  return JSON.stringify(page).replaceAll('<','\\u003c');
+  if (pageUrl !== '/') return JSON.stringify(page).replaceAll('<','\\u003c');
+
+  const websiteId = `${SITE_URL}/#website`;
+  page.isPartOf = { '@id':websiteId };
+  const website = {
+    '@type':'WebSite',
+    '@id':websiteId,
+    url:`${SITE_URL}/`,
+    name:'Abdullah Affun',
+    publisher:{ '@id':personId }
+  };
+  return JSON.stringify({ '@context':'https://schema.org', '@graph':[website, page] }).replaceAll('<','\\u003c');
 };
 
 function hero() {
@@ -294,6 +305,7 @@ await fs.copyFile(
 );
 
 await fs.writeFile(path.join(dist, 'favicon.svg'), await fs.readFile(path.join(src, 'favicon.svg')));
+await fs.writeFile(path.join(dist, 'favicon.png'), await fs.readFile(path.join(src, 'favicon.png')));
 await fs.writeFile(path.join(dist, 'index.html'), buildPage({ pathname:'/', title:pageMeta.home.title, description:pageMeta.home.description, content:homeContent }));
 for (const [key, pathname] of Object.entries(pages)) {
   if (key === 'home') continue;
