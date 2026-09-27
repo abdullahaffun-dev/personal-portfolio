@@ -243,7 +243,7 @@ const focused = {
 const pageMeta = {
   home: {
     title: 'Abdullah Affun',
-    description: 'Abdullah Affun’s portfolio exploring cybersecurity, Python, AI, systems, networking, Linux, and mathematics.'
+    description: 'A portfolio by Abdullah Affun exploring offensive security, systems, programming, AI, and the connections between disciplines.'
   },
   work: {
     title: 'Projects — Abdullah Affun',
