@@ -280,6 +280,13 @@ await fs.writeFile(path.join(dist, 'styles.css'), css);
 await fs.writeFile(path.join(dist, 'site.js'), js);
 await fs.writeFile(path.join(dist, 'theme-preload.js'), themeJs);
 
+if (process.env.CF_PAGES !== '1') {
+  await fs.writeFile(
+    path.join(dist, '_redirects'),
+    '/* https://abdullahaffun.pages.dev/:splat 301\n'
+  );
+}
+
 await fs.mkdir(path.join(dist, 'assets'), { recursive: true });
 await fs.copyFile(
   path.join(src, 'assets', 'og.jpg'),
