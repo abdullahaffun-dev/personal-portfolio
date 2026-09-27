@@ -14,15 +14,17 @@ npm run build
 
 The generated deployable site is written to `dist/`.
 
-## Optional production URL
+## Production URL
 
-Set `SITE_URL` when building to generate absolute canonical URLs and sitemap entries:
+Builds default to the live Cloudflare Pages hostname, `https://abdullahaffun.pages.dev`, for canonical URLs, search metadata, and sitemap entries.
+
+If you move the site to a custom domain, set `SITE_URL` to that exact HTTPS origin when building:
 
 ```bash
 SITE_URL=https://your-domain.example npm run build
 ```
 
-Replace the example with the actual production URL when available.
+Keep the deployment, canonical URLs, Open Graph URLs, and sitemap on the same hostname.
 
 ## Project Structure
 
