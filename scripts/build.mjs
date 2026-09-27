@@ -37,16 +37,14 @@ const arrow = (direction='up-right') => {
 const rootFor = (pathname) => (pathname === '/' || pathname === '/404.html') ? '' : '../';
 const canonical = (pathname) => SITE_URL ? `<link rel="canonical" href="${SITE_URL}${pathname}">` : `<link rel="canonical" href="${pathname}">`;
 const jsonld = (pageUrl, description) => {
-  const rootUrl = `${SITE_URL}/`;
   const pageId = `${SITE_URL}${pageUrl}`;
-  const personId = `${rootUrl}#person`;
-  const websiteId = `${rootUrl}#website`;
+  const personId = `${SITE_URL}/#person`;
   const person = {
     '@type':'Person',
     '@id':personId,
     name:'Abdullah Affun',
     description:'A technically curious student and independent learner exploring cybersecurity, Python, AI, systems, networking, Linux, and mathematics.',
-    url:rootUrl,
+    url:`${SITE_URL}/`,
     sameAs:['https://github.com/abdullahaffun-dev','https://www.linkedin.com/in/abdullah-affun/']
   };
   const page = {
@@ -54,22 +52,21 @@ const jsonld = (pageUrl, description) => {
     '@id': pageId,
     url: pageId,
     description,
-    mainEntity: { '@id': personId }
+    mainEntity: person
   };
   if (pageUrl === '/about/') page.name = 'About — Abdullah Affun';
+  if (pageUrl !== '/') return JSON.stringify(page).replaceAll('<','\\u003c');
 
-  const graph = [person, page];
-  if (pageUrl === '/') {
-    graph.unshift({
-      '@type':'WebSite',
-      '@id':websiteId,
-      url:rootUrl,
-      name:'Abdullah Affun',
-      publisher:{ '@id':personId }
-    });
-    page.isPartOf = { '@id':websiteId };
-  }
-  return JSON.stringify({ '@context':'https://schema.org', '@graph':graph }).replaceAll('<','\\u003c');
+  const websiteId = `${SITE_URL}/#website`;
+  page.isPartOf = { '@id':websiteId };
+  const website = {
+    '@type':'WebSite',
+    '@id':websiteId,
+    url:`${SITE_URL}/`,
+    name:'Abdullah Affun',
+    publisher:{ '@id':personId }
+  };
+  return JSON.stringify({ '@context':'https://schema.org', '@graph':[website, page] }).replaceAll('<','\\u003c');
 };
 
 function hero() {
