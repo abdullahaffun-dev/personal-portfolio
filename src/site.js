@@ -7,11 +7,10 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = window.matchMedia('(pointer:fine)').matches;
 
-  // Theme: saved preference → system preference → dark.
+  // Theme: saved preference → dark by default.
   let savedTheme = null;
   try { savedTheme = localStorage.getItem('affun-theme'); } catch {}
-  const systemLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-  const initialTheme = savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : (systemLight ? 'light' : 'dark');
+  const initialTheme = savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'dark';
   root.dataset.theme = initialTheme;
 
   const themeButtons = document.querySelectorAll('[data-theme-toggle]');
