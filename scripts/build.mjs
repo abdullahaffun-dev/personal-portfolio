@@ -254,7 +254,7 @@ const focused = {
 const pageMeta = {
   home: {
     title: 'Abdullah Affun',
-    description: 'A portfolio by Abdullah Affun exploring offensive security, systems, programming, AI, and the connections between disciplines.'
+    description: 'A personal portfolio built around systems, programming, AI and ideas across disciplines, with offensive security currently leading the way.'
   },
   work: {
     title: 'Projects — Abdullah Affun',
