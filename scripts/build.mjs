@@ -64,6 +64,7 @@ const jsonld = (pageUrl, description) => {
     '@id':websiteId,
     url:`${SITE_URL}/`,
     name:'Abdullah Affun',
+    alternateName:['Affun', 'abdullahaffun.pages.dev'],
     publisher:{ '@id':personId }
   };
   return JSON.stringify({ '@context':'https://schema.org', '@graph':[website, page] }).replaceAll('<','\\u003c');
